@@ -20,6 +20,9 @@ import nl.plaatsoft.micro.dao.Subscription;
  */
 public class InventoryReader implements Observer {
 	
+	/** The Constant log. */
+	private static final Logger log = LogManager.getLogger( InventoryReader.class);
+	
 	/** The subscription. */
 	private Subscription subscription;
 	
@@ -37,10 +40,7 @@ public class InventoryReader implements Observer {
 		this.config = config;
 		this.subscription = subscription;
 	}
-	
-	/** The Constant log. */
-	private static final Logger log = LogManager.getLogger( InventoryReader.class);
-	
+		
 	/**
 	 * To json.
 	 *

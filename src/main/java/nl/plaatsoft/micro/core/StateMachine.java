@@ -97,6 +97,9 @@ public class StateMachine {
 						if (subscription.isStatus()) {
 							StatusReader reader = new StatusReader(config, subscription);
 							statusObservable.addObserver(reader);
+							
+							StatusReader reader2 = new StatusReader(config, subscription);
+							statusObservable.deleteObserver(reader2);
 						}
 						if (subscription.isInventory()) {
 							InventoryReader reader = new InventoryReader(config, subscription);
@@ -112,13 +115,18 @@ public class StateMachine {
 					statusObservable.update(status1);
 					inventoryObservable.update(inventory1);
 					
-					state=State.END;
+					Inventory inventory2 = new Inventory("inventory2", "inventory2 description");         					
+					Status status2 = new Status(new Date(), counter++, inventory2);     
+					statusObservable.update(status2);
+					inventoryObservable.update(inventory2);
+										
+					state=State.IDLE;
 					break;
 					
 				case IDLE:
 					try {
 						sleep(1000);
-						state=State.PUBLISH;
+						state=State.END;
 					} catch (Exception e) {
 						state=State.END;
 					}
