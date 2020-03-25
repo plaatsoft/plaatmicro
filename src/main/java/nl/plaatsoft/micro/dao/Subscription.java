@@ -1,5 +1,6 @@
 package nl.plaatsoft.micro.dao;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -7,42 +8,48 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * The Class Inventory.
+ * The Class Status.
  * 
  * @author wplaat
  */
 @Entity
-@Table(name = "inventory")
-public class Inventory {
+@Table(name = "subscription")
+public class Subscription {
 
 	/** The id. */
-	@Id
+    @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
-	
-	/** The name. */
+            
+    /** The name. */
 	private String name;
 	
 	/** The description. */
 	private String description;
 	
+	@Column(name = "everything")
+    private boolean all;
+	
 	/**
-	 * Instantiates a new inventory.
+	 * Instantiates a new subscription.
 	 */
-	public Inventory() {
+	public Subscription() {
 		super();
 	}
 
 	/**
-	 * Instantiates a new inventory.
+	 * Instantiates a new subscription.
 	 *
 	 * @param name the name
 	 * @param description the description
+	 * @param all the all
+	 * @param inventory the inventory
 	 */
-	public Inventory(String name, String description) {
+	public Subscription(String name, String description, Boolean all) {
 		super();
 		this.name = name;
 		this.description = description;
+		this.all = all;
 	}
 	
 	/**
@@ -52,27 +59,9 @@ public class Inventory {
 	 */
 	@Override
 	public String toString() {
-		return "Inventory [id=" + id + ", name=" + name + ", description=" + description + "]";
+		return "Subscription [id="+id+", name=" + name + ", description=" + description + ", all=" + all + "]";
 	}
-	
-	/**
-	 * Gets the name.
-	 *
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * Sets the name.
-	 *
-	 * @param name the new name
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-
+		
 	/**
 	 * Gets the id.
 	 *
@@ -107,5 +96,31 @@ public class Inventory {
 	 */
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * Sets the name.
+	 *
+	 * @param name the new name
+	 */
+	public void setName(String name) {
+		this.name = name;
+	} 
+	
+	 public boolean getAll() {
+		return all;
+	}
+
+	public void setAll(boolean all) {
+		this.all = all;
 	}
 }

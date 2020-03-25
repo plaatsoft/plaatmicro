@@ -8,6 +8,7 @@
 
         <class>nl.plaatsoft.plaatservice.dao.Status</class>
         <class>nl.plaatsoft.plaatservice.dao.Inventory</class>
+        <class>nl.plaatsoft.plaatservice.dao.Subscription</class>
                 
     </persistence-unit>
 </persistence>

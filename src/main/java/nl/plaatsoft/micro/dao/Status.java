@@ -1,5 +1,6 @@
 package nl.plaatsoft.micro.dao;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -19,10 +20,10 @@ import javax.persistence.Table;
 @Table(name = "status")
 public class Status {
 	
-    /** The sid. */
+    /** The id. */
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private long sid;
+    private long id;
     
     /** The timestamp. */
     private Date timestamp;
@@ -44,49 +45,60 @@ public class Status {
 	 */
 	@Override
 	public String toString() {
-		return "Status [sid=" + sid + ", timestamp=" + timestamp + ", state=" + state + "]";
+		
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+		
+		return "Status [id=" + id + ", timestamp=" + simpleDateFormat.format(timestamp) + ", state=" + state + "," + inventory+"]";
 	}
 		
     /**
      * Instantiates a new status.
      *
-     * @param sid the sid
      * @param timestamp the timestamp
      * @param state the state
-     * @param inventory
+     * @param inventory the inventory
      */
-    public Status(long sid, Date timestamp, int state, Inventory inventory) {
+    public Status( Date timestamp, int state, Inventory inventory) {
 		super();
-		this.sid = sid;
 		this.timestamp = timestamp;
 		this.state = state;
 		this.inventory = inventory;
 	}
 
+    /**
+     * Gets the inventory.
+     *
+     * @return the inventory
+     */
     public Inventory getInventory() {
 		return inventory;
 	}
 
+	/**
+	 * Sets the inventory.
+	 *
+	 * @param inventory the new inventory
+	 */
 	public void setInventory(Inventory inventory) {
 		this.inventory = inventory;
 	}
 	
 	/**
-	 * Gets the sid.
+	 * Gets the id.
 	 *
-	 * @return the sid
+	 * @return the id
 	 */
-	public long getSid() {
-		return sid;
+	public long getId() {
+		return id;
 	}
 
 	/**
-	 * Sets the sid.
+	 * Sets the id.
 	 *
-	 * @param sid the new sid
+	 * @param id the new id
 	 */
-	public void setSid(long sid) {
-		this.sid = sid;
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	/** The state. */

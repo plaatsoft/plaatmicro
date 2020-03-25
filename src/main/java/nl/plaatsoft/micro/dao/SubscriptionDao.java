@@ -3,30 +3,31 @@ package nl.plaatsoft.micro.dao;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+
 import javax.persistence.EntityManager;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * The Class StatusDao.
+ * The Class SubscriptionDao.
  * 
  * @author wplaat
  */
-public class StatusDao {
+public class SubscriptionDao {
 
 	/** The Constant log. */
-	private static final Logger log = LogManager.getLogger( StatusDao.class);
+	private static final Logger log = LogManager.getLogger( SubscriptionDao.class);
 	
     /** The entity manager. */
     private EntityManager entityManager;
     
     /**
-     * Instantiates a new Status dao.
+     * Instantiates a new Subscription dao.
      *
      * @param entityManager the entity manager
      */
-    public StatusDao(EntityManager entityManager) {
+    public SubscriptionDao(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
         
@@ -35,8 +36,8 @@ public class StatusDao {
      *
      * @return the list
      */
-    public List<Status> findAll() {
-        return entityManager.createQuery("from Status").getResultList();
+    public List<Subscription> findAll() {
+        return entityManager.createQuery("from Subscription").getResultList();
     }
    
     /**
@@ -45,14 +46,15 @@ public class StatusDao {
      * @param id the id
      * @return the optional
      */
-    public Optional<Status> findById(long id) {
-    	Status status = entityManager.find(Status.class, id);
-        if (status != null) {
-        	return Optional.of(status);
+    public Optional<Subscription> findById(long id) {
+    	Subscription subscription = entityManager.find(Subscription.class, id);
+        if (subscription != null) {
+        	return Optional.of(subscription);
         } else {
         	return Optional.empty();
         }
     }
+
        
     /**
      * Find by name.
@@ -60,15 +62,15 @@ public class StatusDao {
      * @param name the name
      * @return the single
      */
-    public Optional<Status> findByName(String name) {
+    public Optional<Subscription> findByName(String name) {
     	
     	 try {    		     	
-    		 Status status = entityManager.createQuery("SELECT a FROM Status a WHERE a.name=:name", Status.class)
+    		 Subscription subscription = entityManager.createQuery("SELECT a FROM Subscription a WHERE a.name=:name", Subscription.class)
                 .setParameter("name", name)
                 .setMaxResults(1)
                 .getSingleResult();
    		
-    		 return Optional.of(status);
+    		 return Optional.of(subscription);
     		     		 
     	 } catch (Exception e) {
      		 return Optional.empty();
@@ -79,15 +81,15 @@ public class StatusDao {
     /**
      * Save.
      *
-     * @param status the status
+     * @param subscription the subscription
      * @return the optional
      */
-    public Optional<Status> save(Status status) {
+    public Optional<Subscription> save(Subscription subscription) {
         try {
             entityManager.getTransaction().begin();
-            entityManager.persist(status);
+            entityManager.persist(subscription);
             entityManager.getTransaction().commit();
-            return Optional.of(status);
+            return Optional.of(subscription);
         } catch (Exception e) {
             log.error(e.getMessage());
         }
@@ -98,11 +100,11 @@ public class StatusDao {
      * Truncate.
      */
     public void truncate() {
-    	List<Status> statuses = findAll();
-    	Iterator<Status> iter = statuses.iterator();
+    	List<Subscription> subscriptions = findAll();
+    	Iterator<Subscription> iter = subscriptions.iterator();
  	    while (iter.hasNext()) {
- 	    	Status status = iter.next();
- 	    	entityManager.remove(status); 
+ 	    	Subscription subscription = iter.next();
+ 	    	entityManager.remove(subscription); 
  	    }
      }
 }

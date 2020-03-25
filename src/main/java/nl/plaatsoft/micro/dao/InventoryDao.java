@@ -80,7 +80,7 @@ public class InventoryDao {
     /**
      * Save.
      *
-     * @param Inventory the Inventory
+     * @param inventory the inventory
      * @return the optional
      */
     public Optional<Inventory> save(Inventory inventory) {

@@ -22,8 +22,8 @@
     	<AsyncLogger name="org.hibernate" level="OFF"/>
   	
         <AsyncRoot level="ERROR">
-        	<AppenderRef ref="RollingFile"/>
-            <!--  AppenderRef ref="Console"/-->
+        	<!--  AppenderRef ref="RollingFile"/-->
+            <AppenderRef ref="Console"/>
         </AsyncRoot>
     </Loggers>
 </Configuration>
