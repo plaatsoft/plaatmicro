@@ -15,7 +15,7 @@ public enum State {
 	
 	/** The subscribe. */
 	SUBSCRIBE,
-	
+		
 	/** The publish. */
 	PUBLISH,
 	

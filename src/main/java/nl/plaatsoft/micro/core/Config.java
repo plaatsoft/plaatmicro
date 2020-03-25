@@ -44,6 +44,9 @@ public class Config {
 	/** The hibernate hbm 2 ddl auto. */
 	private String hibernateHbm2ddlAuto;
 	
+	/** The source id. */
+	private String sourceId;
+	
 	
 	/**
 	 * Instantiates a new config.
@@ -74,6 +77,8 @@ public class Config {
 			hibernateDialect = prop.getProperty("hibernateDialect");
 			hibernateShowSql = prop.getProperty("hibernateShowSql");
 			hibernateHbm2ddlAuto = prop.getProperty("hibernateHbm2ddlAuto");
+			
+			sourceId = prop.getProperty("sourceId");
 						
 		} catch (Exception e) {
 			log.error(e.getMessage());
@@ -141,5 +146,14 @@ public class Config {
 	 */
 	public String getHibernateHbm2ddlAuto() {
 		return hibernateHbm2ddlAuto;
+	}
+
+	/**
+	 * Gets the source id.
+	 *
+	 * @return the source id
+	 */
+	public String getSourceId() {
+		return sourceId;
 	}
 }

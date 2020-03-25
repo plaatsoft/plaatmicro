@@ -9,6 +9,7 @@ import javax.persistence.Persistence;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.exception.JDBCConnectionException;
 
 import nl.plaatsoft.micro.dao.InventoryDao;
 import nl.plaatsoft.micro.dao.StatusDao;
@@ -38,7 +39,8 @@ public class Database {
 	
 	/**
 	 * Init.
-	 * @throws Exception 
+	 *
+	 * @throws Exception the exception
 	 */
 	public Database() throws Exception {		
 		
@@ -61,7 +63,7 @@ public class Database {
 			statusDao = new StatusDao(entityManager);
 			inventoryDao = new InventoryDao(entityManager);			
 			subscriptionDao = new SubscriptionDao(entityManager);
-		} catch (Exception e ) {
+		} catch (JDBCConnectionException e ) {
 			log.error(e.getMessage());
 			throw e;
 		}

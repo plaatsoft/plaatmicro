@@ -10,7 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
-import nl.plaatsoft.micro.dao.Status;
+import nl.plaatsoft.micro.dao.Inventory;
 import nl.plaatsoft.micro.dao.Subscription;
 
 /**
@@ -18,7 +18,7 @@ import nl.plaatsoft.micro.dao.Subscription;
  * 
  * @author wplaat
  */
-public class StatusReader implements Observer {
+public class InventoryReader implements Observer {
 	
 	/** The subscription. */
 	private Subscription subscription;
@@ -32,14 +32,14 @@ public class StatusReader implements Observer {
 	 * @param config the config
 	 * @param subscription the subscription
 	 */
-	public StatusReader(Config config, Subscription subscription) {
+	public InventoryReader(Config config, Subscription subscription) {
 		super();
 		this.config = config;
 		this.subscription = subscription;
 	}
 	
 	/** The Constant log. */
-	private static final Logger log = LogManager.getLogger( StatusReader.class);
+	private static final Logger log = LogManager.getLogger( InventoryReader.class);
 	
 	/**
 	 * To json.
@@ -49,7 +49,7 @@ public class StatusReader implements Observer {
 	 * @param status the status
 	 * @return the string
 	 */
-	private static String toJson(Config config, Subscription subscription, Status status) {
+	private static String toJson(Config config, Subscription subscription, Inventory inventory) {
 		
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 		
@@ -60,16 +60,16 @@ public class StatusReader implements Observer {
 		header.put("created", simpleDateFormat.format(new Date()));
 				
 		JSONObject body = new JSONObject();
-		body.put("dt", simpleDateFormat.format(status.getTimestamp()));
-		body.put("status", status.getState());
-		body.put("uid", status.getId());
-	   		 	
+		body.put("id", inventory.getId());
+		body.put("name", inventory.getName());
+		body.put("description", inventory.getDescription());
+			   		 	
 		JSONObject msg = new JSONObject();
 		msg.put("header", header);
 		msg.put("body", body);
 		
 	   	JSONObject obj2 = new JSONObject();
-		obj2.put("plaatmicro_status_publish", msg);
+		obj2.put("plaatmicro_inventory_publish", msg);
 			 	   
 	   	return obj2.toString();
 	}
@@ -82,9 +82,9 @@ public class StatusReader implements Observer {
 	 */
 	public void update(Observable obj, Object arg) {
 		
-		Status status = (Status) arg;
+		Inventory inventory = (Inventory) arg;
 		
-		String msg = toJson(config, subscription, status);
-		log.info(msg);
+		String msg = toJson(config, subscription, inventory);
+        log.info(msg);
     }
 }

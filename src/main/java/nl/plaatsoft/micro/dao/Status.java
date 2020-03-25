@@ -48,7 +48,7 @@ public class Status {
 		
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 		
-		return "Status [id=" + id + ", timestamp=" + simpleDateFormat.format(timestamp) + ", state=" + state + "," + inventory+"]";
+		return "Status [id=" + id + ", timestamp=" + simpleDateFormat.format(timestamp) + ", state=" + state + ", " + inventory+"]";
 	}
 		
     /**

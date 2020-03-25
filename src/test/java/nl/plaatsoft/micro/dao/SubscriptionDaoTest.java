@@ -16,7 +16,7 @@ public class SubscriptionDaoTest extends BaseDaoTest {
 	 */
 	@Test
 	public void testInsert() {				
-		Subscription subscription1 = database.getSubscriptionDao().save(new Subscription("subscription1","subscription description", true)).get();
+		Subscription subscription1 = database.getSubscriptionDao().save(new Subscription("subscription1","subscription description", "destination1", true, true)).get();
 		assertEquals(1, subscription1.getId());    
 	}
 }

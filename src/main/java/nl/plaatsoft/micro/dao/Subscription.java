@@ -1,6 +1,5 @@
 package nl.plaatsoft.micro.dao;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,8 +26,14 @@ public class Subscription {
 	/** The description. */
 	private String description;
 	
-	@Column(name = "everything")
-    private boolean all;
+	/** The destination. */
+	private String destination;
+	
+	/** The status. */
+	private boolean status;
+	
+	/** The inventory. */
+	private boolean inventory;
 	
 	/**
 	 * Instantiates a new subscription.
@@ -42,14 +47,17 @@ public class Subscription {
 	 *
 	 * @param name the name
 	 * @param description the description
-	 * @param all the all
+	 * @param destination the destination
+	 * @param status the status
 	 * @param inventory the inventory
 	 */
-	public Subscription(String name, String description, Boolean all) {
+	public Subscription(String name, String description, String destination, boolean status, boolean inventory) {
 		super();
 		this.name = name;
 		this.description = description;
-		this.all = all;
+		this.destination = destination;
+		this.status = status;
+		this.inventory = inventory;
 	}
 	
 	/**
@@ -59,7 +67,7 @@ public class Subscription {
 	 */
 	@Override
 	public String toString() {
-		return "Subscription [id="+id+", name=" + name + ", description=" + description + ", all=" + all + "]";
+		return "Subscription [id="+id+", name="+name+", description="+description+", status="+status+", inventory="+inventory+"]";
 	}
 		
 	/**
@@ -116,11 +124,57 @@ public class Subscription {
 		this.name = name;
 	} 
 	
-	 public boolean getAll() {
-		return all;
+	/**
+	 * Gets the destination.
+	 *
+	 * @return the destination
+	 */
+	public String getDestination() {
+		return destination;
 	}
 
-	public void setAll(boolean all) {
-		this.all = all;
+	/**
+	 * Sets the destination.
+	 *
+	 * @param destination the new destination
+	 */
+	public void setDestination(String destination) {
+		this.destination = destination;
+	}
+
+	/**
+	 * Checks if is status.
+	 *
+	 * @return true, if is status
+	 */
+	public boolean isStatus() {
+		return status;
+	}
+
+	/**
+	 * Sets the status.
+	 *
+	 * @param status the new status
+	 */
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+
+	/**
+	 * Checks if is inventory.
+	 *
+	 * @return true, if is inventory
+	 */
+	public boolean isInventory() {
+		return inventory;
+	}
+
+	/**
+	 * Sets the inventory.
+	 *
+	 * @param inventory the new inventory
+	 */
+	public void setInventory(boolean inventory) {
+		this.inventory = inventory;
 	}
 }
