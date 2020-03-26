@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="https://micro.plaatsoft.nl" xmlns:ns1="https://micro.plaatsoft.nl">
+
+	<xs:element name="micro_status_subscribe">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ns1:meta" />
+				<xs:element ref="ns1:status_subscribe" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+		
+	<xs:element name="micro_status_publish">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ns1:meta" />
+				<xs:element ref="ns1:status_publish" minOccurs="1" maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="micro_inventory_subscribe">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ns1:meta" />
+				<xs:element ref="ns1:inventory_subscribe" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="micro_inventory_publish">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ns1:meta" />
+				<xs:element ref="ns1:inventory_publish"  minOccurs="1" maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+		
+	<xs:element name="meta">
+       <xs:complexType>
+          <xs:sequence>
+				<xs:element ref="ns1:source" />
+				<xs:element ref="ns1:destination" />
+				<xs:element ref="ns1:msgId" />
+				<xs:element ref="ns1:dt" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="inventory_subscribe">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ns1:source" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="inventory_publish">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ns1:inventoryId" />
+				<xs:element ref="ns1:name" />
+				<xs:element ref="ns1:description" minOccurs="0" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+			
+	<xs:element name="status_subscribe">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ns1:source" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="status_publish">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ns1:inventoryId" />
+				<xs:element ref="ns1:state" />
+				<xs:element ref="ns1:dt" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="description" type="xs:string" />
+	<xs:element name="name" type="xs:string" />
+	<xs:element name="source" type="xs:string" />
+	<xs:element name="destination" type="xs:string" />
+	<xs:element name="msgId" type="xs:string" />
+	<xs:element name="dt" type="xs:dateTime" />
+	<xs:element name="inventoryId" type="xs:string" />
+	<xs:element name="state" type="xs:int" />
+	<xs:element name="status" type="xs:boolean" />
+
+</xs:schema>
