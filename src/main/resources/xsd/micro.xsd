@@ -48,27 +48,13 @@
 		</xs:complexType>
 	</xs:element>
 	
-	<xs:element name="inventory_subscribe">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="ns1:source" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
+
 	
-	<xs:element name="inventory_publish">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="ns1:inventoryId" />
-				<xs:element ref="ns1:name" />
-				<xs:element ref="ns1:description" minOccurs="0" />
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-			
 	<xs:element name="status_subscribe">
 		<xs:complexType>
 			<xs:sequence>
+				<xs:element ref="ns1:name" />
+				<xs:element ref="ns1:description" minOccurs="0" />
 				<xs:element ref="ns1:source" />
 			</xs:sequence>
 		</xs:complexType>
@@ -84,6 +70,27 @@
 		</xs:complexType>
 	</xs:element>
 	
+	<xs:element name="inventory_subscribe">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ns1:name" />
+				<xs:element ref="ns1:description" minOccurs="0" />
+				<xs:element ref="ns1:source" />				
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	
+	<xs:element name="inventory_publish">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ns1:inventoryId" />
+				<xs:element ref="ns1:name" />
+				<xs:element ref="ns1:description" minOccurs="0" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+				
 	<xs:element name="description" type="xs:string" />
 	<xs:element name="name" type="xs:string" />
 	<xs:element name="source" type="xs:string" />

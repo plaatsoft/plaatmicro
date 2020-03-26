@@ -3,6 +3,7 @@ package nl.plaatsoft.micro.core;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,6 +11,9 @@ import org.apache.logging.log4j.Logger;
 import nl.plaatsoft.micro.dao.Inventory;
 import nl.plaatsoft.micro.dao.Status;
 import nl.plaatsoft.micro.dao.Subscription;
+import nl.plaatsoft.micro.schema.MicroInventorySubscribe;
+import nl.plaatsoft.micro.schema.MicroStatusPublish;
+import nl.plaatsoft.micro.schema.MicroStatusSubscribe;
 
 /**
  * The Class StateMachine.
@@ -65,6 +69,53 @@ public class StateMachine {
 			throw e;
 	    }      					   
 	}
+	
+	/**
+	 * Onramp.
+	 *
+	 * @param object the object
+	 */
+	public void onramp(Object object) {
+		
+		if (object.getClass().equals(MicroStatusSubscribe.class)) {
+			
+			MicroStatusSubscribe subscribe = (MicroStatusSubscribe) object;
+			
+			Subscription subscription = new Subscription(
+					subscribe.getStatusSubscribe().getName(), 
+					subscribe.getStatusSubscribe().getDescription(), 
+					subscribe.getStatusSubscribe().getSource(),
+					true, false);
+			
+			database.getSubscriptionDao().save(subscription);
+			
+		} else if (object.getClass().equals(MicroInventorySubscribe.class)) {
+			
+			MicroInventorySubscribe subscribe = (MicroInventorySubscribe) object;
+			
+			Subscription subscription = new Subscription(
+					subscribe.getInventorySubscribe().getName(), 
+					subscribe.getInventorySubscribe().getDescription(), 
+					subscribe.getInventorySubscribe().getSource(),
+					false, true);
+			
+			database.getSubscriptionDao().save(subscription);
+			
+		} else if (object.getClass().equals(MicroStatusPublish.class)) {
+			
+			MicroStatusPublish publish = (MicroStatusPublish) object;
+			
+			Optional<Inventory> inventory = database.getInventoryDao().findByName(publish.getStatusPublish().get(0).getInventoryId());
+			if (inventory.isPresent()) {
+				
+				Status status = new Status();
+				status.setInventory(inventory.get());
+				status.setState(publish.getStatusPublish().get(0).getState());
+				status.setTimestamp(Utils.toDate(publish.getStatusPublish().get(0).getDt()));
+			}
+		}
+	}
+	
 	
 	/**
 	 * State machine.

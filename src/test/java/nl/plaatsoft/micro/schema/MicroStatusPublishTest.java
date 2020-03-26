@@ -14,6 +14,8 @@ import nl.plaatsoft.micro.core.Utils;
 
 /**
  * The Class MicroStatusPublishTest.
+ * 
+ * @author wplaat
  */
 public class MicroStatusPublishTest {
 	

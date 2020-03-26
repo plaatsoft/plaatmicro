@@ -1,5 +1,6 @@
 package nl.plaatsoft.micro.core;
 
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 import javax.xml.datatype.DatatypeFactory;
@@ -27,4 +28,17 @@ public class Utils {
 			return null;
 		}
 	}
+		
+	/**
+	 * To date.
+	 *
+	 * @param calendar the calendar
+	 * @return the date
+	 */
+	public static Date toDate(XMLGregorianCalendar calendar){
+	 if(calendar == null) {
+	     return null;
+	 }
+     return calendar.toGregorianCalendar().getTime();
+    }
 }

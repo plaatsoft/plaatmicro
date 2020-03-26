@@ -14,6 +14,8 @@ import nl.plaatsoft.micro.core.Utils;
 
 /**
  * The Class MicroInventorySubscribeTest.
+ * 
+ * @author wplaat
  */
 public class MicroInventorySubscribeTest {
 	
@@ -30,6 +32,8 @@ public class MicroInventorySubscribeTest {
 		meta.setDt(Utils.getXMLGregorianCalendarNow());
 		
 		InventorySubscribe InventorySubscribe = new InventorySubscribe();
+		InventorySubscribe.setName("inventory1");
+		InventorySubscribe.setDescription("inventory1 description");
 		InventorySubscribe.setSource("source1");
 				
 		MicroInventorySubscribe subscribe = new  MicroInventorySubscribe();
@@ -44,7 +48,7 @@ public class MicroInventorySubscribeTest {
 			StringWriter sw = new StringWriter();
 			marshaller.marshal(subscribe, sw);
 					
-			assertEquals(445, sw.toString().length());
+			assertEquals(535, sw.toString().length());
 		} catch (Exception e) {
 			
 		}
