@@ -1,9 +1,13 @@
 package nl.plaatsoft.micro.core;
 
-import java.util.Date;
+import java.io.StringWriter;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,9 +15,16 @@ import org.apache.logging.log4j.Logger;
 import nl.plaatsoft.micro.dao.Inventory;
 import nl.plaatsoft.micro.dao.Status;
 import nl.plaatsoft.micro.dao.Subscription;
+import nl.plaatsoft.micro.schema.InfoReply;
+import nl.plaatsoft.micro.schema.InventoryPublish;
+import nl.plaatsoft.micro.schema.Metareply;
+import nl.plaatsoft.micro.schema.MicroInfoReply;
+import nl.plaatsoft.micro.schema.MicroInfoRequest;
+import nl.plaatsoft.micro.schema.MicroInventoryPublish;
 import nl.plaatsoft.micro.schema.MicroInventorySubscribe;
 import nl.plaatsoft.micro.schema.MicroStatusPublish;
 import nl.plaatsoft.micro.schema.MicroStatusSubscribe;
+import nl.plaatsoft.micro.schema.StatusPublish;
 
 /**
  * The Class StateMachine.
@@ -77,10 +88,12 @@ public class StateMachine {
 	 */
 	public void onramp(Object object) {
 		
+		log.info("RX: {}", object);
+		
 		if (object.getClass().equals(MicroStatusSubscribe.class)) {
 			
 			MicroStatusSubscribe subscribe = (MicroStatusSubscribe) object;
-			
+
 			Subscription subscription = new Subscription(
 					subscribe.getStatusSubscribe().getName(), 
 					subscribe.getStatusSubscribe().getDescription(), 
@@ -90,7 +103,7 @@ public class StateMachine {
 			database.getSubscriptionDao().save(subscription);
 			
 		} else if (object.getClass().equals(MicroInventorySubscribe.class)) {
-			
+						
 			MicroInventorySubscribe subscribe = (MicroInventorySubscribe) object;
 			
 			Subscription subscription = new Subscription(
@@ -105,14 +118,92 @@ public class StateMachine {
 			
 			MicroStatusPublish publish = (MicroStatusPublish) object;
 			
-			Optional<Inventory> inventory = database.getInventoryDao().findByName(publish.getStatusPublish().get(0).getInventoryId());
-			if (inventory.isPresent()) {
-				
-				Status status = new Status();
-				status.setInventory(inventory.get());
-				status.setState(publish.getStatusPublish().get(0).getState());
-				status.setTimestamp(Utils.toDate(publish.getStatusPublish().get(0).getDt()));
+			for (int i=0; i<publish.getStatusPublish().size(); i++) {
+					
+				Optional<Inventory> inventory = database.getInventoryDao().findByName(publish.getStatusPublish().get(i).getInventoryId());
+				if (inventory.isPresent()) {
+					Status status = new Status();
+					status.setInventory(inventory.get());
+					status.setState(publish.getStatusPublish().get(i).getState());
+					status.setTimestamp(Utils.toDate(publish.getStatusPublish().get(i).getDt()));
+					
+					database.getStatusDao().save(status);					
+				}				
 			}
+			
+		} else if (object.getClass().equals(MicroInventoryPublish.class)) {
+			
+			MicroInventoryPublish publish = (MicroInventoryPublish) object;
+			
+			for (int i=0; i<publish.getInventoryPublish().size(); i++) {
+				
+				Inventory inventory = new Inventory();
+				inventory.setName(publish.getInventoryPublish().get(i).getName());
+				inventory.setDescription(publish.getInventoryPublish().get(i).getDescription());
+				
+				database.getInventoryDao().save(inventory);
+			}
+			
+		} else if (object.getClass().equals(MicroInfoRequest.class)) {
+			
+			MicroInfoRequest request = (MicroInfoRequest) object;
+			
+			Metareply metareply = new Metareply();
+			metareply.setDestination(request.getMeta().getSource());
+			metareply.setSource(request.getMeta().getDestination());
+			metareply.setRequestId(request.getMeta().getMsgId());
+			metareply.setMsgId(UUID.randomUUID().toString());
+			metareply.setDt(Utils.getXMLGregorianCalendarNow());
+			
+			InfoReply infoReply = new InfoReply();
+					
+			List <Inventory> inventories = database.getInventoryDao().findAll();
+			Iterator <Inventory> iter2 = inventories.iterator();
+			while (iter2.hasNext()) {
+				
+				Inventory inventory = iter2.next();	
+				
+				InventoryPublish inventoryPublish = new InventoryPublish();
+				inventoryPublish.setName(inventory.getName());
+				inventoryPublish.setDescription(inventory.getDescription());
+				
+				infoReply.getInventoryPublish().add(inventoryPublish);				
+			}
+						
+			List <Status> statusses = database.getStatusDao().findAll();
+			Iterator <Status> iter3 = statusses.iterator();
+			while (iter3.hasNext()) {
+				
+				Status status = iter3.next();	
+				
+				StatusPublish statusPublish = new StatusPublish();
+				//statusPublish.setDt(status.getTimestamp())
+				statusPublish.setInventoryId(status.getInventory().getName());
+				statusPublish.setState(status.getState());
+								
+				infoReply.getStatusPublish().add(statusPublish);				
+			}
+			
+			MicroInfoReply reply = new MicroInfoReply();
+			reply.setMetareply(metareply);
+			reply.setInfoReply(infoReply);
+			
+			try {
+				JAXBContext jaxbContext = JAXBContext.newInstance(MicroInfoReply.class);
+				Marshaller marshaller = jaxbContext.createMarshaller();
+				marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+
+				StringWriter sw = new StringWriter();
+				marshaller.marshal(reply, sw);
+
+				log.info(sw.toString());
+				
+			} catch (Exception e) {
+				log.error(e.getMessage());
+			}			
+			
+		} else {
+			log.error("RX: unknown message received");
 		}
 	}
 	
@@ -123,9 +214,7 @@ public class StateMachine {
 	 * @return true, if successful
 	 */
 	public boolean start() {
-	
-		int counter = 0; 
-		
+			
 		while (!terminate) {
 		
 			log.info("state={}", state);	
@@ -142,15 +231,12 @@ public class StateMachine {
 					
 					List <Subscription> subscriptions = database.getSubscriptionDao().findAll();
 					
-					Iterator <Subscription> iter = subscriptions.iterator();
-					while (iter.hasNext()) {
-						Subscription subscription = iter.next();	
+					Iterator <Subscription> iter1 = subscriptions.iterator();
+					while (iter1.hasNext()) {
+						Subscription subscription = iter1.next();	
 						if (subscription.isStatus()) {
 							StatusReader reader = new StatusReader(config, subscription);
 							statusObservable.addObserver(reader);
-							
-							StatusReader reader2 = new StatusReader(config, subscription);
-							statusObservable.deleteObserver(reader2);
 						}
 						if (subscription.isInventory()) {
 							InventoryReader reader = new InventoryReader(config, subscription);
@@ -160,16 +246,21 @@ public class StateMachine {
 					state=State.PUBLISH;
 					break;
 										
-				case PUBLISH:					
-					Inventory inventory1 = new Inventory("inventory1", "inventory1 description");         					
-					Status status1 = new Status(new Date(), counter++, inventory1);     
-					statusObservable.update(status1);
-					inventoryObservable.update(inventory1);
+				case PUBLISH:				
 					
-					Inventory inventory2 = new Inventory("inventory2", "inventory2 description");         					
-					Status status2 = new Status(new Date(), counter++, inventory2);     
-					statusObservable.update(status2);
-					inventoryObservable.update(inventory2);
+					List <Inventory> inventories = database.getInventoryDao().findAll();
+					Iterator <Inventory> iter2 = inventories.iterator();
+					while (iter2.hasNext()) {
+						Inventory inventory = iter2.next();	
+						inventoryObservable.update(inventory);
+					}
+					
+					List <Status> statusses = database.getStatusDao().findAll();
+					Iterator <Status> iter3 = statusses.iterator();
+					while (iter3.hasNext()) {
+						Status status = iter3.next();	
+						statusObservable.update(status);
+					}
 										
 					state=State.IDLE;
 					break;

@@ -32,11 +32,29 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="ns1:meta" />
-				<xs:element ref="ns1:inventory_publish"  minOccurs="1" maxOccurs="unbounded" />
+				<xs:element ref="ns1:inventory_publish" minOccurs="1" maxOccurs="unbounded" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-		
+	
+	<xs:element name="micro_info_request">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ns1:meta" />
+				<xs:element ref="ns1:info_request" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="micro_info_reply">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ns1:metareply" />
+				<xs:element ref="ns1:info_reply" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+			
 	<xs:element name="meta">
        <xs:complexType>
           <xs:sequence>
@@ -48,8 +66,18 @@
 		</xs:complexType>
 	</xs:element>
 	
-
-	
+	<xs:element name="metareply">
+       <xs:complexType>
+          <xs:sequence>
+				<xs:element ref="ns1:source" />
+				<xs:element ref="ns1:destination" />
+				<xs:element ref="ns1:msgId" />
+				<xs:element ref="ns1:requestId" />
+				<xs:element ref="ns1:dt" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+		
 	<xs:element name="status_subscribe">
 		<xs:complexType>
 			<xs:sequence>
@@ -80,7 +108,6 @@
 		</xs:complexType>
 	</xs:element>
 	
-	
 	<xs:element name="inventory_publish">
 		<xs:complexType>
 			<xs:sequence>
@@ -90,15 +117,35 @@
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
+	
+	<xs:element name="info_request">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ns1:status" minOccurs="0" />
+				<xs:element ref="ns1:inventory" minOccurs="0" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="info_reply">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ns1:inventory_publish" minOccurs="0" maxOccurs="unbounded" />
+				<xs:element ref="ns1:status_publish" minOccurs="0" maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
 				
 	<xs:element name="description" type="xs:string" />
 	<xs:element name="name" type="xs:string" />
 	<xs:element name="source" type="xs:string" />
 	<xs:element name="destination" type="xs:string" />
 	<xs:element name="msgId" type="xs:string" />
+	<xs:element name="requestId" type="xs:string" />
 	<xs:element name="dt" type="xs:dateTime" />
 	<xs:element name="inventoryId" type="xs:string" />
 	<xs:element name="state" type="xs:int" />
 	<xs:element name="status" type="xs:boolean" />
+	<xs:element name="inventory" type="xs:boolean" />
 
 </xs:schema>
