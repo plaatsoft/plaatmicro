@@ -3,4 +3,4 @@ v0.1.0 @wplaat
 - Added parent pom
 - Upgrade Log4J to 2.17.0
 - Upgrade jUnit to 2.13.1
-
+- Upgrade H2 to 2.0.202
